@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Builder</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Form Builder</h1>
+    </header>
+    <section id="app">
+      <ul>
+        <li>
+          <h2>FormSelector</h2>
+          <ul>
+            <builders-Option></builders-Option>
+            <builders-Option></builders-Option>
+            <builders-Option></builders-Option>
+            <li>
+              <strong>Art:
+                <select name="cars" id="cars">
+                  <option value="builders-Field-input">Input</option>
+                  <option value="builders-Field-dropdown">Dropdown</option>
+                  <option value="builders-Field-Button">Button</option>
+                </select></strong><br />
+              Name:
+              <input type="text" />
+            </li>
+          </ul>
+
+          <button>New Field</button>
+        </li>
+        <li>
+          <h3>Input test</h3>
+          <input type="text" />
+          <button @click="toggleDetails">Submit</button>
+
+          <h3>Select test</h3>
+          <select name="cars" id="cars">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="mercedes">Mercedes</option>
+            <option value="audi">Audi</option>
+          </select>
+          <button @click="toggleDetails">Submit</button>
+        </li>
+      </ul>
+    </section>
+  </body>
+</html>

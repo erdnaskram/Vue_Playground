@@ -21,36 +21,32 @@
         <li>
           <h2>FormSelector</h2>
           <ul>
-            <builders-Option></builders-Option>
-            <builders-Option></builders-Option>
-            <builders-Option></builders-Option>
-            <li>
-              <strong>Art:
-                <select name="cars" id="cars">
-                  <option value="builders-Field-input">Input</option>
-                  <option value="builders-Field-dropdown">Dropdown</option>
-                  <option value="builders-Field-Button">Button</option>
-                </select></strong><br />
-              Name:
-              <input type="text" />
-            </li>
+            <a v-for="fieldParams in inputFields" :key="index">
+              <builders-option :parameters.sync="fieldParams"></builders-option>
+            </a>
           </ul>
 
-          <button>New Field</button>
+          <button @click="addField">New Field</button>
         </li>
         <li>
-          <h3>Input test</h3>
-          <input type="text" />
-          <button @click="toggleDetails">Submit</button>
-
-          <h3>Select test</h3>
-          <select name="cars" id="cars">
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
-            <option value="mercedes">Mercedes</option>
-            <option value="audi">Audi</option>
-          </select>
-          <button @click="toggleDetails">Submit</button>
+          <a v-for="field in inputFields">
+            <builders-field-input
+              v-if="field.type === 'builders-field-input'"
+              :parameters.sync="field"
+            ></builders-field-input>
+            <builders-field-select
+              v-if="field.type === 'builders-field-select'"
+              :parameters.sync="field"
+            ></builders-field-select>
+            <builders-field-radio
+              v-if="field.type === 'builders-field-radio'"
+              :parameters.sync="field"
+            ></builders-field-radio>
+            <builders-field-button
+              v-if="field.type === 'builders-field-button'"
+              :parameters.sync="field"
+            ></builders-field-button>
+          </a>
         </li>
       </ul>
     </section>

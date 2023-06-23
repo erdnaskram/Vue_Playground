@@ -1,60 +1,83 @@
 const app = Vue.createApp({
   data() {
     return {
-      friends: [
+      input: "",
+      inputTypes: [
         {
-          id: "john",
-          name: "John Doe",
-          phone: "+49 151 12345678",
-          email: "john.doe@gmail.com",
+          name: "Input",
+          type: "builders-field-input",
         },
         {
-          id: "jane",
-          name: "Jane Smith",
-          phone: "+49 157 23456789",
-          email: "jane.smith@yahoo.com",
+          name: "Dropdown",
+          type: "builders-field-dropdown",
         },
         {
-          id: "bob",
-          name: "Bob Johnson",
-          phone: "+49 160 34567890",
-          email: "bob.johnson@hotmail.com",
+          name: "Radio",
+          type: "builders-field-radio",
         },
         {
-          id: "susan",
-          name: "Susan Lee",
-          phone: "+49 162 45678901",
-          email: "susan.lee@outlook.com",
+          name: "Button",
+          type: "builders-field-button",
+        },
+      ],
+      inputFields: [
+        {
+          name: "Vorname",
+          type: "builders-field-input",
+          options: [],
+        },
+        {
+          name: "NaTextme",
+          type: "builders-field-input",
+          options: [],
         },
       ],
     };
   },
-  methods: {},
+  methods: {
+    addField() {
+      this.inputFields.push({
+        name: "-",
+        type: "builders-field-input",
+        options: [],
+      });
+    }
+  },
 });
 
-app.component("builders-Option", {
+app.component("builders-option", {
   template: `
       <li>
-      <strong>Art:
-        <select name="cars" id="cars">
-          <option value="builders-Field-input">Input</option>
-          <option value="builders-Field-dropdown">Dropdown</option>
-          <option value="builders-Field-Button">Button</option>
-        </select></strong><br />
-        Name:
-        <input type="text" />
+      <strong>Art:</strong>
+        <select v-model="parameters.type">
+          <option value="builders-field-input">Input</option>
+          <option value="builders-field-select">Dropdown</option>
+          <option value="builders-field-radio">Radio</option>
+          <option value="builders-field-button">Button</option>
+        </select><br/>
+        Titel:
+        <input v-model="parameters.name" type="text" />
+      <br><br><button @click="deleteDetail">Löschen</button>
       </li>
     `,
   data() {
     return {
     };
   },
+  props: {
+    parameters: {
+      type: Object,
+      required: true,
+    },
+  },
   methods: {
-
+    updateValue(event) {
+      this.$emit('input', event.target.value);
+    },
   },
 });
 
-app.component("builders-Field", {
+app.component("builders-field", {
   template: `
     <li :key="friend.id">
         <h2>{{ friend.name }}</h2>
@@ -85,33 +108,99 @@ app.component("builders-Field", {
   },
 });
 
-app.component("builders-Field-input", {
+app.component("builders-field-input", {
   template: `
-    <li :key="friend.id">
-        <h2>{{ friend.name }}</h2>
-        <button @click="toggleDetails">
-            {{ detailsAreVisible ? 'Hide' : 'Show'}} Details
-        </button>
-        <ul v-if="detailsAreVisible">
-            <li><strong>Phone:</strong> {{ friend.phone }}</li>
-            <li><strong>Email:</strong> {{ friend.email }}</li>
-        </ul>
-    </li>
+        <h3>{{ parameters.name }}</h3>
+        <input type="text" />
     `,
   data() {
     return {
-      detailsAreVisible: false,
-      friend: {
-        id: "susan",
-        name: "Susan Lee",
-        phone: "+49 162 45678901",
-        email: "susan.lee@outlook.com",
-      },
+      titel: "Geben sie ihren Namen ein",
     };
   },
+  props: {
+    parameters: {
+      type: Object,
+      required: true,
+    },
+  },
   methods: {
-    toggleDetails() {
-      this.detailsAreVisible = !this.detailsAreVisible;
+    updateValue(event) {
+      this.$emit('input', event.target.value);
+    },
+  },
+});
+
+app.component("builders-field-select", {
+  template: `
+      <h3>{{ parameters.name }}</h3>
+      <select name="cars" id="cars">
+        <option value="volvo">Volvo</option>
+        <option value="saab">Saab</option>
+        <option value="mercedes">Mercedes</option>
+        <option value="audi">Audi</option>
+      </select>
+    `,
+  data() {
+    return {
+    };
+  },
+  props: {
+    parameters: {
+      type: Object,
+      required: true,
+    },
+  },
+  methods: {
+    updateValue(event) {
+      this.$emit('input', event.target.value);
+    },
+  },
+});
+
+app.component("builders-field-radio", {
+  template: `
+    <h3>{{ parameters.name }}</h3>
+      <input type="radio" id="yes" value="true">
+      <label for="yes">Ja</label>
+      <input type="radio" id="no" value="false">
+      <label for="no">Nein</label>
+    `,
+  data() {
+    return {
+    };
+  },
+  props: {
+    parameters: {
+      type: Object,
+      required: true,
+    },
+  },
+  methods: {
+    updateValue(event) {
+      this.$emit('input', event.target.value);
+    },
+  },
+});
+
+app.component("builders-field-button", {
+  template: `
+      <h3>{{ parameters.name }}</h3>
+      <button @click="toggleDetails">Submit</button>
+    `,
+  data() {
+    return {
+    };
+  },
+  props: {
+    parameters: {
+      type: Object,
+      required: true,
+    },
+  },
+  methods: {
+    updateValue(event) {
+      this.$emit('input', event.target.value);
     },
   },
 });

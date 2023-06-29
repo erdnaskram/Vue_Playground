@@ -25,11 +25,13 @@ const app = Vue.createApp({
           name: "Vorname",
           type: "builders-field-input",
           options: [],
+          showBuildersOption: false,
         },
         {
           name: "NaTextme",
           type: "builders-field-input",
           options: [],
+          showBuildersOption: true,
         },
       ],
     };
@@ -40,6 +42,7 @@ const app = Vue.createApp({
         name: "-",
         type: "builders-field-input",
         options: [],
+        showBuildersOption: false,
       });
     },
   },
@@ -54,8 +57,7 @@ app.component("builders-option", {
       <option value="builders-field-select">Dropdown</option>
       <option value="builders-field-radio">Radio</option>
       <option value="builders-field-button">Button</option>
-    </select>
-    <button class="options-button">&vellip;</button><br/>
+    </select><br/>
     Titel:
     <input v-model="nameValue" type="text" />
     <br><br>
@@ -63,7 +65,10 @@ app.component("builders-option", {
   </li>
     `,
   data() {
-    return {};
+    return {
+      type: "",
+      name: "",
+    };
   },
   props: {
     parameters: {
@@ -92,9 +97,10 @@ app.component("builders-option", {
 app.component("builders-field", {
   template: `
   <li>
-    <button class="options-button">&vellip;</button>
+    <button @click="toggelBuildersOptions" class="options-button">&vellip;</button>
     <!-- Pass the parameters prop to the builders-option component using the .sync modifier -->
-    <builders-option :parameters.sync="parameters"></builders-option>
+    <builders-option v-show="parameters.showBuildersOption"
+    :parameters.sync="parameters"></builders-option>
     <slot></slot>
   </li>
   `,
@@ -114,6 +120,11 @@ app.component("builders-field", {
     updateValue(event) {
       this.$emit("input", event.target.value);
     },
+    toggelBuildersOptions() {
+      console.log(this.parameters.showBuildersOption);
+      this.parameters.showBuildersOption = !this.parameters.showBuildersOption;
+      this.$forceUpdate();
+    }
   },
 });
 

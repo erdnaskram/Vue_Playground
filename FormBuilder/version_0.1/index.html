@@ -29,8 +29,8 @@
           <button @click="addField">New Field</button>
         </li>
         <li>
-          <a v-for="field in inputFields">
-            <builders-field>
+          <a v-for="(field, index) in inputFields" :key="index">
+            <builders-field :key="index" :parameters.sync="field" :index="index">
               <builders-field-input
                 v-if="field.type === 'builders-field-input'"
                 :parameters.sync="field"
@@ -49,6 +49,8 @@
               ></builders-field-button
             ></builders-field>
           </a>
+
+          <button @click="addField">New Field</button>
         </li>
       </ul>
     </section>

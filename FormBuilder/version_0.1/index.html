@@ -30,22 +30,24 @@
         </li>
         <li>
           <a v-for="field in inputFields">
-            <builders-field-input
-              v-if="field.type === 'builders-field-input'"
-              :parameters.sync="field"
-            ></builders-field-input>
-            <builders-field-select
-              v-if="field.type === 'builders-field-select'"
-              :parameters.sync="field"
-            ></builders-field-select>
-            <builders-field-radio
-              v-if="field.type === 'builders-field-radio'"
-              :parameters.sync="field"
-            ></builders-field-radio>
-            <builders-field-button
-              v-if="field.type === 'builders-field-button'"
-              :parameters.sync="field"
-            ></builders-field-button>
+            <builders-field>
+              <builders-field-input
+                v-if="field.type === 'builders-field-input'"
+                :parameters.sync="field"
+              ></builders-field-input>
+              <builders-field-select
+                v-if="field.type === 'builders-field-select'"
+                :parameters.sync="field"
+              ></builders-field-select>
+              <builders-field-radio
+                v-if="field.type === 'builders-field-radio'"
+                :parameters.sync="field"
+              ></builders-field-radio>
+              <builders-field-button
+                v-if="field.type === 'builders-field-button'"
+                :parameters.sync="field"
+              ></builders-field-button
+            ></builders-field>
           </a>
         </li>
       </ul>

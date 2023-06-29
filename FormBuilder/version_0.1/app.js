@@ -41,69 +41,78 @@ const app = Vue.createApp({
         type: "builders-field-input",
         options: [],
       });
-    }
+    },
   },
 });
 
 app.component("builders-option", {
   template: `
-      <li>
-      <strong>Art:</strong>
-        <select v-model="parameters.type">
-          <option value="builders-field-input">Input</option>
-          <option value="builders-field-select">Dropdown</option>
-          <option value="builders-field-radio">Radio</option>
-          <option value="builders-field-button">Button</option>
-        </select><br/>
-        Titel:
-        <input v-model="parameters.name" type="text" />
-      <br><br><button @click="deleteDetail">Löschen</button>
-      </li>
+  <li>
+    <strong>Art:</strong>
+    <select v-model="typeValue">
+      <option value="builders-field-input">Input</option>
+      <option value="builders-field-select">Dropdown</option>
+      <option value="builders-field-radio">Radio</option>
+      <option value="builders-field-button">Button</option>
+    </select>
+    <button class="options-button">&vellip;</button><br/>
+    Titel:
+    <input v-model="nameValue" type="text" />
+    <br><br>
+    <button @click="deleteDetail">Löschen</button>
+  </li>
     `,
   data() {
-    return {
-    };
+    return {};
   },
   props: {
     parameters: {
       type: Object,
       required: true,
+      // Add the .sync modifier to the parameters prop
+      // to enable two-way binding
+      default: () => ({})
     },
   },
   methods: {
-    updateValue(event) {
-      this.$emit('input', event.target.value);
+    deleteDetail() {
+      // Implement delete functionality here
+    },
+  },
+  computed: {
+    typeValue() {
+      return this.parameters ? this.parameters.type : "";
+    },
+    nameValue() {
+      return this.parameters ? this.parameters.name : "";
     },
   },
 });
 
 app.component("builders-field", {
   template: `
-    <li :key="friend.id">
-        <h2>{{ friend.name }}</h2>
-        <button @click="toggleDetails">
-            {{ detailsAreVisible ? 'Hide' : 'Show'}} Details
-        </button>
-        <ul v-if="detailsAreVisible">
-            <li><strong>Phone:</strong> {{ friend.phone }}</li>
-            <li><strong>Email:</strong> {{ friend.email }}</li>
-        </ul>
-    </li>
-    `,
+  <li>
+    <button class="options-button">&vellip;</button>
+    <!-- Pass the parameters prop to the builders-option component using the .sync modifier -->
+    <builders-option :parameters.sync="parameters"></builders-option>
+    <slot></slot>
+  </li>
+  `,
   data() {
     return {
-      detailsAreVisible: false,
-      friend: {
-        id: "susan",
-        name: "Susan Lee",
-        phone: "+49 162 45678901",
-        email: "susan.lee@outlook.com",
-      },
+      titel: "Geben sie ihren Namen ein",
     };
   },
+  props: {
+    parameters: {
+      type: Object,
+      required: true,
+      default: () => ({})
+    },
+  },
   methods: {
-    toggleDetails() {
-      this.detailsAreVisible = !this.detailsAreVisible;
+    updateValue(event) {
+      this.$emit("input", event.target.value);
     },
   },
 });
@@ -126,7 +135,7 @@ app.component("builders-field-input", {
   },
   methods: {
     updateValue(event) {
-      this.$emit('input', event.target.value);
+      this.$emit("input", event.target.value);
     },
   },
 });
@@ -142,8 +151,7 @@ app.component("builders-field-select", {
       </select>
     `,
   data() {
-    return {
-    };
+    return {};
   },
   props: {
     parameters: {
@@ -153,7 +161,7 @@ app.component("builders-field-select", {
   },
   methods: {
     updateValue(event) {
-      this.$emit('input', event.target.value);
+      this.$emit("input", event.target.value);
     },
   },
 });
@@ -167,8 +175,7 @@ app.component("builders-field-radio", {
       <label for="no">Nein</label>
     `,
   data() {
-    return {
-    };
+    return {};
   },
   props: {
     parameters: {
@@ -178,7 +185,7 @@ app.component("builders-field-radio", {
   },
   methods: {
     updateValue(event) {
-      this.$emit('input', event.target.value);
+      this.$emit("input", event.target.value);
     },
   },
 });
@@ -189,8 +196,7 @@ app.component("builders-field-button", {
       <button @click="toggleDetails">Submit</button>
     `,
   data() {
-    return {
-    };
+    return {};
   },
   props: {
     parameters: {
@@ -200,7 +206,7 @@ app.component("builders-field-button", {
   },
   methods: {
     updateValue(event) {
-      this.$emit('input', event.target.value);
+      this.$emit("input", event.target.value);
     },
   },
 });

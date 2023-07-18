@@ -20,17 +20,12 @@
       <ul>
         <li>
           <h2>FormSelector</h2>
-          <ul>
-            <a v-for="fieldParams in inputFields" :key="index">
-              <builders-option :parameters.sync="fieldParams"></builders-option>
-            </a>
-          </ul>
-
-          <button @click="addField">New Field</button>
-        </li>
-        <li>
           <a v-for="(field, index) in inputFields" :key="index">
-            <builders-field :key="index" :parameters.sync="field" :index="index">
+            <builders-field
+              :input_types.sync="inputTypes"
+              :parameters.sync="field"
+              :remove-field="removeField"
+            >
               <builders-field-input
                 v-if="field.type === 'builders-field-input'"
                 :parameters.sync="field"
@@ -46,14 +41,25 @@
               <builders-field-button
                 v-if="field.type === 'builders-field-button'"
                 :parameters.sync="field"
-              ></builders-field-button
-            ></builders-field>
+              ></builders-field-button>
+              <builders-field-date
+                v-if="field.type === 'builders-field-date'"
+                :parameters.sync="field"
+              ></builders-field-date>
+
+              <div>
+                <br />
+                <button @click="moveField(index, -1)">Up</button>
+                <button @click="moveField(index, 1)">Down</button>
+              </div>
+            </builders-field>
           </a>
-          
 
           <button @click="addField">New Field</button>
         </li>
       </ul>
+
+      <builders-field-regexgenerator></builders-field-regexgenerator>
     </section>
   </body>
 </html>

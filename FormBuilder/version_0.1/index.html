@@ -30,10 +30,10 @@
                 v-if="field.type === 'builders-field-input'"
                 :parameters.sync="field"
               ></builders-field-input>
-              <builders-field-select
-                v-if="field.type === 'builders-field-select'"
+              <builders-field-dropdown
+                v-if="field.type === 'builders-field-dropdown'"
                 :parameters.sync="field"
-              ></builders-field-select>
+              ></builders-field-dropdown>
               <builders-field-radio
                 v-if="field.type === 'builders-field-radio'"
                 :parameters.sync="field"

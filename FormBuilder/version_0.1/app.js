@@ -218,17 +218,34 @@ app.component("builders-field", {
 app.component("builders-field-input", {
   template: `
         <h3>{{ parameters.name }}</h3>
-        <input type="text" />
+        <input type="text" v-model="input_data"
+        :class="{ 'valid': input_dataState, 'invalid': !input_dataState }"/>
     `,
   data() {
     return {
       titel: "Geben sie ihren Namen ein",
+      input_data: "Hellno",
+      showValidation: true,
     };
   },
   props: {
     parameters: {
       type: Object,
       required: true,
+    },
+  },
+  computed: {
+    input_dataState(){
+      if (this.showValidation)
+        return this.input_dataValidation;
+      return null;
+    },
+    input_dataValidation(){
+      return this.input_data.test(this.regex);
+    },
+    regex() {
+      const regexOption = this.parameters.options.find((option) => option.name === "regex");
+      return regexOption ? regexOption.value : null;
     },
   },
   methods: {
@@ -238,11 +255,11 @@ app.component("builders-field-input", {
   },
 });
 
-app.component("builders-field-select", {
+app.component("builders-field-dropdown", {
   template: `
       <h3>{{ parameters.name }}</h3>
       <select name="cars" id="cars">
-        <option value="volvo">Volvo</option>
+        <option v-for="option in options" :value="option">{{ option }}</option>
         <option value="saab">Saab</option>
         <option value="mercedes">Mercedes</option>
         <option value="audi">Audi</option>
@@ -260,6 +277,11 @@ app.component("builders-field-select", {
   methods: {
     updateValue(event) {
       this.$emit("input", event.target.value);
+    },
+  },
+  computed: {
+    options() {
+      return this.parameters.options.find((option) => option.name === "Optionen").split(";"); // split the options string into an array
     },
   },
 });

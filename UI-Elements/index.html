@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UI ELEMENTS</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>UI ELEMENTS</h1>
+    </header>
+    <section id="app">
+      <h1> TEST </h1>
+      <ul>
+      <li :style="{ width: '200px', height: '200px' }" @click="toggleAbbo1">
+        <img
+          :src="imageSrc"
+          :style="{ filter: !abbo1 ? 'grayscale(100%)' : '' }"
+        />
+      </li>
+      <li :style="{ width: '200px', height: '200px' }" @click="toggleAbbo2">
+        <img
+          :src="imageSrc"
+          :style="{ filter: !abbo2 ? 'grayscale(100%)' : '' }"
+        />
+      </li>
+    </ul>
+    </section>
+  </body>
+</html>

@@ -32,10 +32,18 @@ header {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   margin: 1rem auto;
   border-radius: 10px;
-  padding: 1rem;
   text-align: center;
   width: 90%;
   max-width: 40rem;
+  padding: 1em;
+}
+
+
+
+#app img {
+  border-radius: 10px;
+  width: 100%;
+  height: auto;
 }
 
 #app h2 {
@@ -80,15 +88,4 @@ header {
   text-align: center;
   cursor: pointer;
   font-weight: bold;
-}
-
-
-
-/** Validation */
-.valid {
-  border: 2px solid green;
-}
-
-.invalid {
-  border: 2px solid red;
 }

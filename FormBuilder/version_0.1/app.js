@@ -26,9 +26,20 @@ const app = Vue.createApp({
       ],
       inputFields: [
         {
+          name: "DropIT",
+          type: "builders-field-dropdown",
+          options: [
+            { name: "Optionen", type: "text", value: "tester; bla; lala;" },
+          ],
+          showBuildersOption: true,
+        },
+        {
           name: "Vorname",
           type: "builders-field-input",
-          options: [],
+          options: [
+            { name: "min", type: "number", value: 3 },
+            { name: "max", type: "number", value: 20 },
+          ],
           showBuildersOption: false,
         },
         {
@@ -126,16 +137,17 @@ app.component("builders-option", {
     type(newType) {
       this.$emit("update:type", newType);
     },
-    'parameters.type'(newType) {
+    "parameters.type"(newType) {
       console.log(newType);
       switch (newType) {
         case "builders-field-input":
           this.parameters.options = [
-            { name: "RegEx", type: "regex", value: "" },];
+            { name: "RegEx", type: "regex", value: "" },
+          ];
           break;
         case "builders-field-dropdown":
           this.parameters.options = [
-            { name: "Optionen", type: "list", value: [] },
+            { name: "Optionen", type: "text", value: "" },
           ];
           break;
         case "builders-field-radio":
@@ -156,7 +168,6 @@ app.component("builders-option", {
           ];
           break;
       }
-
     },
   },
 });
@@ -235,16 +246,18 @@ app.component("builders-field-input", {
     },
   },
   computed: {
-    input_dataState(){
-      if (this.showValidation)
-        return this.input_dataValidation;
+    input_dataState() {
+      if (this.showValidation) return this.input_dataValidation;
       return null;
     },
-    input_dataValidation(){
-      return this.input_data.test(this.regex);
+    input_dataValidation() {
+      return false;
+      //return this.input_data.test(this.regex);
     },
     regex() {
-      const regexOption = this.parameters.options.find((option) => option.name === "regex");
+      const regexOption = this.parameters.options.find(
+        (option) => option.name === "regex"
+      );
       return regexOption ? regexOption.value : null;
     },
   },
@@ -260,9 +273,6 @@ app.component("builders-field-dropdown", {
       <h3>{{ parameters.name }}</h3>
       <select name="cars" id="cars">
         <option v-for="option in options" :value="option">{{ option }}</option>
-        <option value="saab">Saab</option>
-        <option value="mercedes">Mercedes</option>
-        <option value="audi">Audi</option>
       </select>
     `,
   data() {
@@ -281,7 +291,16 @@ app.component("builders-field-dropdown", {
   },
   computed: {
     options() {
-      return this.parameters.options.find((option) => option.name === "Optionen").split(";"); // split the options string into an array
+      console.log(
+        this.parameters.options.find((option) => option.name === "Optionen")
+          .value
+      );
+      return this.parameters.options
+        .find((option) => option.name === "Optionen")
+        .value.split(";")
+        .filter(function (opt) {
+          return opt != "";
+        }); // split the options string into an array and remove empty options
     },
   },
 });
@@ -353,20 +372,127 @@ app.component("builders-field-date", {
   },
   computed: {
     minDate() {
-      const minOption = this.parameters.options.find((option) => option.name === "min");
+      const minOption = this.parameters.options.find(
+        (option) => option.name === "min"
+      );
       return minOption ? minOption.value : null;
     },
     maxDate() {
-      const maxOption = this.parameters.options.find((option) => option.name === "max");
+      const maxOption = this.parameters.options.find(
+        (option) => option.name === "max"
+      );
       return maxOption ? maxOption.value : null;
     },
   },
 });
 
+app.component("code-generator", {
+  template: `
+    <li>
+    <button @click="generateCode">Generate Code</button>
+    <br>
+    <a v-if="generatedCode != ''">{{ generatedCode }}</a>
+    </li>
+      `,
+  data() {
+    return {
+      generatedCode: "",
+    };
+  },
+  props: {
+    parameters: {
+      type: Object,
+      required: true,
+    },
+  },
+  methods: {
+    generateCode() {
+      this.generatedCode = this.generateFieldSectionCode();
+      console.log(this.parameters);
+    },
+    generateFieldSectionCode() {
+      let code = "";
+      this.parameters.forEach((field) => {
+        code += this.generateFieldCode(field);
+      });
+      return code;
+    },
+    generateFieldCode(field) {
+      switch (field.type) {
+        case "builders-field-input":
+          return this.generateInputFieldCode(field);
+        case "builders-field-dropdown":
+          return this.generateDropdownFieldCode(field);
+        case "builders-field-radio":
+          return this.generateRadioFieldCode(field);
+        case "builders-field-button":
+          return this.generateButtonFieldCode(field);
+        case "builders-field-date":
+          return this.generateDateFieldCode(field);
+      }
+    },
+    generateInputFieldCode(field) {
+      let code = `<li :class="input_field"><h3>$title</h3>
+      <input type="text" v-model="input_data"
+      /></li>`;
 
+      code = code.replace("$title", field.name);
+
+      return code;
+    },
+    generateDropdownFieldCode(field) {
+      let optionsCode = "";
+      let code = `<li :class="input_field"><h3>$title</h3>
+      <select>
+        $options
+      </select></li>`;
+      let options = field.options
+      .find((option) => option.name === "Optionen")
+      .value.split(";")
+      .filter(function (opt) {
+        return opt != "";
+      }); // split the options string into an array and remove empty options
+
+      options.forEach((option) => {
+        optionsCode += `<option value="${option}">${option}</option>`;
+      });
+
+      code = code.replace("$title", field.name);
+      code = code.replace("$options", optionsCode);
+
+      return code;
+    },
+    generateRadioFieldCode(field) {
+      return `<builders-field-radio></builders-field-radio>`;
+    },
+    generateButtonFieldCode(field) {
+      return `<builders-field-button></builders-field-button>`;
+    },
+    generateDateFieldCode(field) {
+      let code = `<li :class="date_field"><<h3>$title</h3>
+      <input type="date" id="start" name="start"
+       :min="$min" :max="$max"></li>`;
+       let min = field.options
+      .find((option) => option.name === "min");
+      let max = field.options
+     .find((option) => option.name === "max");
+
+     code = code.replace("$title", field.name);
+     code = code.replace("$min", min.value);
+     code = code.replace("$max", max.value);
+
+      return code;
+    },
+  },
+  watch: {
+    //$Watch
+  },
+  computed: {
+    //$Computed
+  },
+});
 
 app.component("builders-option-regexgenerator", {
-
   template: `
   <div>
   <h3>Noch fehlerhafter RegEx Generator</h3>
@@ -478,6 +604,6 @@ app.component("builders-option-regexgenerator", {
       this.regex = regex;
     },
   },
-})
+});
 
 app.mount("#app");
